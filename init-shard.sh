@@ -63,7 +63,13 @@ rs.initiate({
     { _id : 0, host : "database.fluddi.com:57017" },
     { _id : 1, host : "database.fluddi.com:57018" },
     { _id : 2, host : "database.fluddi.com:57019", arbiterOnly: true }
-  ]
+  ]net:
+  ssl:
+    mode: requireSSL
+    PEMKeyFile: /opt/mongodb/certificate.pem
+    CAFile: /opt/mongodb/CA.pem
+    clusterFile: /opt/mongodb/certificate.pem
+
 })
 EOF
 
@@ -196,7 +202,7 @@ echo ">>>>> Shard enabled in database fluddi"
 echo ">>>>> Created appadmin SSL client user for fluddi"
 echo ">>>>> Created webapp SSL client user for web application"
 
-mongo --port 27018 --tls  --tlsAllowInvalidCertificates --host database.fluddi.com --tlsCertificateKeyFile /opt/mongodb/admin-client.pem --tlsCAFile /opt/mongodb/CA.pem << 'EOF'
+mongo --port 27018 --tls --tlsAllowInvalidCertificates --host database.fluddi.com --tlsCertificateKeyFile /opt/mongodb/certificate.pem --tlsCAFile /opt/mongodb/CA.pem << 'EOF'
 db.getSiblingDB("$external").auth(
   {
     mechanism: "MONGODB-X509",

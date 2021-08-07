@@ -14,7 +14,7 @@ mongod --config ./confs/shard0/r2.conf
 
 sleep 5
 # connect to one server and initiate the set
-mongo --port 37017 --ssl --host database.fluddi.com --sslPEMKeyFile /opt/mongodb/certificate.pem --sslCAFile /opt/mongodb/CA.pem << 'EOF'
+mongo --port 37017 --tls  --tlsAllowInvalidCertificates --host database.fluddi.com --tlsCertificateKeyFile /opt/mongodb/certificate.pem --tlsCAFile /opt/mongodb/CA.pem << 'EOF'
 rs.initiate({
   _id: "s0",
   members: [
@@ -35,7 +35,7 @@ mongod --config ./confs/shard1/r2.conf
 
 sleep 5
 
-mongo --port 47017 --ssl --host database.fluddi.com --sslPEMKeyFile /opt/mongodb/certificate.pem --sslCAFile /opt/mongodb/CA.pem << 'EOF'
+mongo --port 47017 --tls  --tlsAllowInvalidCertificates --host database.fluddi.com --tlsCertificateKeyFile /opt/mongodb/certificate.pem --tlsCAFile /opt/mongodb/CA.pem << 'EOF'
 rs.initiate({
   _id: "s1",
   members: [
@@ -56,7 +56,7 @@ mongod --config ./confs/shard2/r2.conf
 
 sleep 5
 
-mongo --port 57017 --ssl --host database.fluddi.com --sslPEMKeyFile /opt/mongodb/certificate.pem --sslCAFile /opt/mongodb/CA.pem << 'EOF'
+mongo --port 57017 --tls  --tlsAllowInvalidCertificates --host database.fluddi.com --tlsCertificateKeyFile /opt/mongodb/certificate.pem --tlsCAFile /opt/mongodb/CA.pem << 'EOF'
 rs.initiate({
   _id: "s2",
   members: [
@@ -77,7 +77,7 @@ mongod --config ./confs/config/r2.conf
 
 sleep 5
 
-mongo --port 57040 --ssl --host database.fluddi.com --sslPEMKeyFile /opt/mongodb/certificate.pem --sslCAFile /opt/mongodb/CA.pem << 'EOF'
+mongo --port 57040 --tls  --tlsAllowInvalidCertificates --host database.fluddi.com --tlsCertificateKeyFile /opt/mongodb/certificate.pem --tlsCAFile /opt/mongodb/CA.pem << 'EOF'
 rs.initiate({
   _id: "cfg",
   configsvr: true,
@@ -96,7 +96,7 @@ sleep 10
 
 # Create shard's local user
 #1
-mongo --port 37017 --ssl --host database.fluddi.com --sslPEMKeyFile /opt/mongodb/certificate.pem --sslCAFile /opt/mongodb/CA.pem << 'EOF'
+mongo --port 37017 --tls  --tlsAllowInvalidCertificates --host database.fluddi.com --tlsCertificateKeyFile /opt/mongodb/certificate.pem --tlsCAFile /opt/mongodb/CA.pem << 'EOF'
 db.getSiblingDB("admin").createUser(
   {
     user: "shard0",
@@ -111,7 +111,7 @@ EOF
 echo ">>>>> shard0 local user created"
 
 #2
-mongo --port 47017 --ssl --host database.fluddi.com --sslPEMKeyFile /opt/mongodb/certificate.pem --sslCAFile /opt/mongodb/CA.pem << 'EOF'
+mongo --port 47017  --tlsAllowInvalidCertificates --tls --host database.fluddi.com --tlsCertificateKeyFile /opt/mongodb/certificate.pem --tlsCAFile /opt/mongodb/CA.pem << 'EOF'
 db.getSiblingDB("admin").createUser(
   {
     user: "shard1",
@@ -126,7 +126,7 @@ EOF
 echo ">>>>> shard1 local user created"
 
 #3
-mongo --port 57017 --ssl --host database.fluddi.com --sslPEMKeyFile /opt/mongodb/certificate.pem --sslCAFile /opt/mongodb/CA.pem << 'EOF'
+mongo --port 57017 --tls  --tlsAllowInvalidCertificates --host database.fluddi.com --tlsCertificateKeyFile /opt/mongodb/certificate.pem --tlsCAFile /opt/mongodb/CA.pem << 'EOF'
 db.getSiblingDB("admin").createUser(
   {
     user: "shard2",
@@ -149,7 +149,7 @@ sleep 60
 echo ">>>>> Connnecting to mongos and enabling sharding"
 
 # add shards and enable sharding on the fluddi db
-mongo --port 27018 --ssl --host database.fluddi.com --sslPEMKeyFile /opt/mongodb/certificate.pem --sslCAFile /opt/mongodb/CA.pem << 'EOF'
+mongo --port 27018 --tls  --tlsAllowInvalidCertificates --host database.fluddi.com --tlsCertificateKeyFile /opt/mongodb/certificate.pem --tlsCAFile /opt/mongodb/CA.pem << 'EOF'
 db.getSiblingDB("admin").createUser(
   {
     user: "admin",
@@ -196,7 +196,7 @@ echo ">>>>> Shard enabled in database fluddi"
 echo ">>>>> Created appadmin SSL client user for fluddi"
 echo ">>>>> Created webapp SSL client user for web application"
 
-mongo --port 27018 --ssl --host database.fluddi.com --sslPEMKeyFile /opt/mongodb/admin-client.pem --sslCAFile /opt/mongodb/CA.pem << 'EOF'
+mongo --port 27018 --tls  --tlsAllowInvalidCertificates --host database.fluddi.com --tlsCertificateKeyFile /opt/mongodb/admin-client.pem --tlsCAFile /opt/mongodb/CA.pem << 'EOF'
 db.getSiblingDB("$external").auth(
   {
     mechanism: "MONGODB-X509",
